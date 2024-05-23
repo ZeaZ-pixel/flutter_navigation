@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         body: const HomePage(),
       ),
       routes: {
-        '/page2': (context) => const Page2(),
+        'page2': (context) => Page2(),
       },
     );
   }
@@ -32,8 +32,8 @@ class HomePage extends StatelessWidget {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          Route route = MaterialPageRoute(builder: (context) => const Page2());
-          Navigator.pushNamed(context, '/page2');
+          const user = User(name: 'wewewe', age: 12);
+          Navigator.pushNamed(context, 'page2', arguments: user);
         },
         child: const Text('Move to Page 2'),
       ),
@@ -42,22 +42,42 @@ class HomePage extends StatelessWidget {
 }
 
 class Page2 extends StatelessWidget {
-  const Page2({super.key});
+  late User user;
+
+  Page2({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Page 2'),
-          centerTitle: true,
-        ),
+    RouteSettings? settings = ModalRoute.of(context)?.settings;
+    if (settings != null) {
+      user = settings.arguments as User;
+    } else {
+      return const Scaffold(
         body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Go back'),
-          ),
-        ));
+          child: Text('Error: Settings are null'),
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('${user.name} - ${user.age}'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Go back'),
+        ),
+      ),
+    );
   }
+}
+
+class User {
+  final String name;
+  final int age;
+
+  const User({required this.name, required this.age});
 }
