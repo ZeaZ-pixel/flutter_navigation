@@ -13,7 +13,6 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Routing and Navigation'),
-          centerTitle: true,
         ),
         body: const HomePage(),
       ),
